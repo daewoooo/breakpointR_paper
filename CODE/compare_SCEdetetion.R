@@ -6,59 +6,31 @@ library(RColorBrewer)
 library(dplyr)
 library(scales)
 
-## Chromosomes to analyze
-chroms <- paste0('chr', c(1:22, 'X'))
-
-## Run breakpointR for 200kb window ##
-######################################
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac01_back01/", 
-            outputfolder = "BreakpointR_results_200kb", windowsize = 200000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac025_back01/", 
-            outputfolder = "BreakpointR_results_200kb", windowsize = 200000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac05_back01/", 
-            outputfolder = "BreakpointR_results_200kb", windowsize = 200000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac075_back01/", 
-            outputfolder = "BreakpointR_results_200kb", windowsize = 200000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
 
 ## Calculate stat for 200kb window in BAIT ##
 #############################################
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac01_back01/")
-COV01_BACK01 <- compareResults(simul.breaks = "COV01_BACK01_SCE_list.txt", 
-                  bait.sce = "Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                  breakpointr.sce = "BreakpointR_results_200kb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV01_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV01_BACK01_SCE_list.txt", 
+                  bait.sce = "BAIT_results/200kb_bin/BAIT_200kb_frac01.BED", 
+                  breakpointr.sce = "breakpointR_results/200kb_bin/breakPointR_200kb_frac01.txt", 
                   index = "COV01_BACK01")
 
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac025_back01/")
-COV025_BACK01 <- compareResults(simul.breaks = "COV025_BACK01_SCE_list.txt", 
-                               bait.sce = "Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                               breakpointr.sce = "BreakpointR_results_200kb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV025_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV025_BACK01_SCE_list.txt", 
+                               bait.sce = "BAIT_results/200kb_bin/BAIT_200kb_frac025.BED", 
+                               breakpointr.sce = "breakpointR_results/200kb_bin/breakPointR_200kb_frac025.txt", 
                                index = "COV025_BACK01")
 
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac05_back01/")
-COV05_BACK01 <- compareResults(simul.breaks = "COV05_BACK01_SCE_list.txt", 
-                                bait.sce = "Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                                breakpointr.sce = "BreakpointR_results_200kb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV05_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV01_BACK05_SCE_list.txt", 
+                                bait.sce = "BAIT_results/200kb_bin/BAIT_200kb_frac05.BED", 
+                                breakpointr.sce = "breakpointR_results/200kb_bin/breakPointR_200kb_frac05.txt", 
                                 index = "COV05_BACK01")
 
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac075_back01/")
-COV075_BACK01 <- compareResults(simul.breaks = "COV075_BACK01_SCE_list.txt", 
-                               bait.sce = "Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                               breakpointr.sce = "BreakpointR_results_200kb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV075_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV075_BACK01_SCE_list.txt", 
+                               bait.sce = "BAIT_results/200kb_bin/BAIT_200kb_frac075.BED", 
+                               breakpointr.sce = "breakpointR_results/200kb_bin/breakPointR_200kb_frac075.txt", 
                                index = "COV075_BACK01")
 
 ## Calculate summary statistics (specificity) for 200kb window ##
@@ -154,56 +126,30 @@ plt3 <- ggplot() + geom_col(data=plt.df, aes(x=categ, y=value, fill=ID), positio
 plt.final.200kb <- plot_grid(plt2, plt3, nrow = 1, rel_widths = c(1,3), align = 'h', axis = 'b')
 
 
-## Run breakpointR for 1Mb window ##
-####################################
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac01_back01/", 
-            outputfolder = "BreakpointR_results_1Mb", windowsize = 1000000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac025_back01/", 
-            outputfolder = "BreakpointR_results_1Mb", windowsize = 1000000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac05_back01/", 
-            outputfolder = "BreakpointR_results_1Mb", windowsize = 1000000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
-ptm <- proc.time()
-breakpointr(inputfolder = "/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac075_back01/", 
-            outputfolder = "BreakpointR_results_1Mb", windowsize = 1000000, binMethod = 'size', 
-            pairedEndReads = FALSE, chromosomes = chroms, min.mapq = 10, filtAlt = TRUE, background = 0.05, minReads = 100, conf = 0.95)
-proc.time() - ptm
-
 ## Calculate stat for 1Mb window in BAIT ##
 ###########################################
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac01_back01/")
-COV01_BACK01 <- compareResults(simul.breaks = "COV01_BACK01_SCE_list.txt", 
-                               bait.sce = "BAIT_1Mb/Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                               breakpointr.sce = "BreakpointR_results_1Mb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV01_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV01_BACK01_SCE_list.txt", 
+                               bait.sce = "BAIT_results/1Mb_bin/BAIT_1Mb_frac01.BED", 
+                               breakpointr.sce = "breakpointR_results/1Mb_bin/breakPointR_1Mb_frac01.txt", 
                                index = "COV01_BACK01")
 
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac025_back01/")
-COV025_BACK01 <- compareResults(simul.breaks = "COV025_BACK01_SCE_list.txt", 
-                                bait.sce = "BAIT_1Mb/Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                                breakpointr.sce = "BreakpointR_results_1Mb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV025_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV025_BACK01_SCE_list.txt", 
+                                bait.sce = "BAIT_results/1Mb_bin/BAIT_1Mb_frac025.BED", 
+                                breakpointr.sce = "breakpointR_results/1Mb_bin/breakPointR_1Mb_frac025.txt", 
                                 index = "COV025_BACK01")
 
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac05_back01/")
-COV05_BACK01 <- compareResults(simul.breaks = "COV05_BACK01_SCE_list.txt", 
-                               bait.sce = "BAIT_1Mb/Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                               breakpointr.sce = "BreakpointR_results_1Mb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV05_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV01_BACK05_SCE_list.txt", 
+                               bait.sce = "BAIT_results/1Mb_bin/BAIT_1Mb_frac05.BED", 
+                               breakpointr.sce = "breakpointR_results/1Mb_bin/breakPointR_1Mb_frac05.txt", 
                                index = "COV05_BACK01")
 
-setwd("/home/porubsky/WORK/BreakpointR_paper/Revisions/simulations_GRCh38/BAMs_frac075_back01/")
-COV075_BACK01 <- compareResults(simul.breaks = "COV075_BACK01_SCE_list.txt", 
-                                bait.sce = "BAIT_1Mb/Summary_files_BAIT/BAIT_TOTAL_LIBRARY_SCE.BED", 
-                                breakpointr.sce = "BreakpointR_results_1Mb/breakpoints/breakPointSummary.txt", 
+setwd("breakpointR_paper/")
+COV075_BACK01 <- compareResults(simul.breaks = "Simulated_breakpoints/COV075_BACK01_SCE_list.txt", 
+                                bait.sce = "BAIT_results/1Mb_bin/BAIT_1Mb_frac075.BED", 
+                                breakpointr.sce = "breakpointR_results/1Mb_bin/breakPointR_1Mb_frac075.txt", 
                                 index = "COV075_BACK01")
 
 ## Calculate summary statistics (specificity)
